@@ -3,13 +3,14 @@ import dotenv from "dotenv";
 import authRoute from "./routes/auth.route.js";
 import messageRoute from "./routes/message.route.js";
 import path from "path";
+import { connectDB } from "./lib/db.js";
 dotenv.config({ path: "src/.env" });
 const PORT = process.env.PORT;
+const __dirname = path.resolve();
 
 const app = express();
 
-const __dirname = path.resolve();
-
+app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/message", messageRoute);
 
@@ -26,5 +27,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(PORT, () => {
-  console.log("Running at 3000");
+  console.log("Running at ", PORT);
+  connectDB();
 });
