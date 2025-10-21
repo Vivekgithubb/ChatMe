@@ -8,7 +8,10 @@
   },
   "scripts": {
     "build": "npm install --prefix backend && npm install --prefix frontend && npm rum build --prefix frontend",
-    "start": "npm run start --prefix backend"
+    "start": "npm run start --prefix backend",
+    "start:backend": "cd backend && nodemon src/server.js",
+    "start:frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
   },
   "repository": {
     "type": "git",
@@ -20,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Vivekgithubb/ChatMe/issues"
   },
-  "homepage": "https://github.com/Vivekgithubb/ChatMe#readme"
+  "homepage": "https://github.com/Vivekgithubb/ChatMe#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
