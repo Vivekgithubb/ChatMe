@@ -4,7 +4,7 @@ import { ENV } from "./env.js";
 export const generateToken = (userId, res) => {
   const { SECRET } = ENV;
   if (!SECRET) throw new Error("SECRET not set");
-  const token = jwt.sign({ userId: userId }, process.env.SECRET, {
+  const token = jwt.sign({ userId: userId }, SECRET, {
     expiresIn: 86400 * 7,
   });
   res.cookie("jwt", token, {
