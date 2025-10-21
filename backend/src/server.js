@@ -5,8 +5,10 @@ import messageRoute from "./routes/message.route.js";
 import path from "path";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
+import { ENV } from "./lib/env.js";
+
 dotenv.config({ path: "src/.env" });
-const PORT = process.env.PORT;
+const PORT = ENV.PORT;
 const __dirname = path.resolve();
 
 const app = express();
