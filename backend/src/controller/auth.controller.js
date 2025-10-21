@@ -1,3 +1,4 @@
+import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 
@@ -17,8 +18,8 @@ export const signup = async (req, res) => {
     if (!emailRegex.test(email))
       return res.status(400).json({ message: "email is wrong format" });
 
-    const user = await User.findOne({ email: email });
-    if (!user) return res.status(404).json({ message: "Email already exists" });
+    const user = await User.findOne({ email });
+    if (user) return res.status(404).json({ message: "Email already exists" });
 
     //encrypting the password
     const salt = await bcrypt.genSalt(10);
@@ -31,12 +32,13 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
-      generateToken(newUser._id, password);
+      generateToken(newUser._id, res);
       await newUser.save();
       res.status(200).json({
         _id: newUser._id,
         fullname: newUser.fullname,
         email: newUser.email,
+        profilePics: newUser.profilePics,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -47,5 +49,4 @@ export const signup = async (req, res) => {
       .status(500)
       .json({ message: "Something went wron, Internal server error" });
   }
-  res.send("Signup");
 };
