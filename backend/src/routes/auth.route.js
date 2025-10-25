@@ -14,7 +14,7 @@ router.get("/test", arcjetProtection, (req, res) => {
   res.status(200).json({ message: "testRoute" });
 });
 
-router.use(arcjetProtection); //runs first then all others run only if its succesfull
+// router.use(arcjetProtection); //runs first then all others run only if its succesfull
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
