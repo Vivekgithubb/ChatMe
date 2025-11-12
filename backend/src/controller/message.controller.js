@@ -94,7 +94,7 @@ export const getChatPartners = async (req, res) => {
           senderId: loggedInUserId,
         },
         {
-          senderId: loggedInUserId,
+          receiverId: loggedInUserId,
         },
       ],
     });

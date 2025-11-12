@@ -1,25 +1,49 @@
-import { useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router";
 
-function SignUpPage() {
-  const [form, setFormData] = useState({
-    fullname: "",
-    email: "",
-    password: "",
-  });
+export default function FuturisticSignup() {
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { signUp, isSigningUp } = useAuthStore();
-  const handleSubmit = (e) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  function validate() {
+    const err = {};
+    if (!form.name.trim()) err.name = "Please enter your name";
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+      err.email = "Enter a valid email";
+    if (form.password.length < 6)
+      err.password = "Password must be at least 6 characters";
+    setErrors(err);
+    return Object.keys(err).length === 0;
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    signUp(form);
-  };
-  const errors = 5;
+    if (!validate()) return;
+    setSubmitting(true);
+    try {
+      // Simulate backend request (replace with axios/fetch)
+      await new Promise((r) => setTimeout(r, 900));
+      console.log("signup payload:", form);
+      alert("Signed up — demo only. Connect to backend when ready.");
+      setForm({ name: "", email: "", password: "" });
+      setErrors({});
+    } catch (err) {
+      console.error(err);
+      alert("Signup failed — check console for details.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br  p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#08122b] to-[#001529] p-6">
       {/* floating gradient orbs */}
       <motion.div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -61,13 +85,48 @@ function SignUpPage() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-center mb-6">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">Create account</h1>
             <p className="text-sm text-white/70 mt-1">
               Join the future — secure faster with a single step.
             </p>
           </div>
+          <motion.div
+            className="w-12 h-12 rounded-xl bg-gradient-to-tr from-white/8 to-white/3 flex items-center justify-center shadow-lg"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2v6"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M5 12h14"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7 20h10"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
         </div>
 
         {/* Form */}
@@ -79,9 +138,7 @@ function SignUpPage() {
             <input
               name="name"
               value={form.name}
-              onChange={(e) => {
-                setFormData({ ...form, fullname: e.target.value });
-              }}
+              onChange={handleChange}
               className={`w-full rounded-xl px-4 py-3 bg-white/6 border ${
                 errors.name ? "border-red-400" : "border-white/8"
               } focus:outline-none focus:ring-2 focus:ring-white/10`}
@@ -98,9 +155,7 @@ function SignUpPage() {
             <input
               name="email"
               value={form.email}
-              onChange={(e) => {
-                setFormData({ ...form, email: e.target.value });
-              }}
+              onChange={handleChange}
               className={`w-full rounded-xl px-4 py-3 bg-white/6 border ${
                 errors.email ? "border-red-400" : "border-white/8"
               } focus:outline-none focus:ring-2 focus:ring-white/10`}
@@ -118,9 +173,7 @@ function SignUpPage() {
             <input
               name="password"
               value={form.password}
-              onChange={(e) => {
-                setFormData({ ...form, password: e.target.value });
-              }}
+              onChange={handleChange}
               className={`w-full rounded-xl px-4 py-3 bg-white/6 border ${
                 errors.password ? "border-red-400" : "border-white/8"
               } focus:outline-none focus:ring-2 focus:ring-white/10 pr-12`}
@@ -150,10 +203,10 @@ function SignUpPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              disabled={isSigningUp}
+              disabled={submitting}
               className="w-full rounded-xl py-3 font-semibold bg-gradient-to-r from-[#7c3aed] via-[#06b6d4] to-[#fb923c] text-white shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isSigningUp ? "Creating..." : "Create account"}
+              {submitting ? "Creating..." : "Create account"}
             </motion.button>
           </div>
 
@@ -164,15 +217,40 @@ function SignUpPage() {
           </div>
         </form>
 
+        {/* Social options */}
+        <div className="mt-6 grid grid-cols-3 items-center gap-4">
+          <div className="h-px bg-white/6" />
+          <div className="text-center text-xs text-white/60">
+            Or continue with
+          </div>
+          <div className="h-px bg-white/6" />
+        </div>
+
+        <div className="mt-4 flex gap-3">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            className="flex-1 rounded-xl py-2 bg-white/6 border border-white/8 text-white/90 font-medium"
+          >
+            Continue with Google
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            className="w-14 rounded-xl py-2 bg-white/6 border border-white/8 text-white/90 font-medium"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 12.27c0-.68-.06-1.16-.2-1.67H12v3.15h5.14c-.09.9-.6 2.07-1.7 2.86v2.38h2.73c1.6-1.48 2.53-3.66 2.53-6.72z"
+                fill="#4285F4"
+              />
+            </svg>
+          </motion.button>
+        </div>
+
         <div className="mt-6 text-center text-sm text-white/70">
           Already have an account?{" "}
-          <Link className="underline" to="/login">
-            Sign in
-          </Link>
+          <button className="underline">Sign in</button>
         </div>
       </motion.div>
     </div>
   );
 }
-
-export default SignUpPage;
