@@ -5,6 +5,7 @@ import messageRoute from "./routes/message.route.js";
 import path from "path";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { ENV } from "./lib/env.js";
 
 dotenv.config({ path: "src/.env" });
@@ -15,6 +16,13 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL, // e.g., "http://localhost:3000"
+    credentials: true,
+  })
+);
+
 app.use("/api/auth", authRoute);
 app.use("/api/message", messageRoute);
 
