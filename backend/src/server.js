@@ -14,14 +14,15 @@ const __dirname = path.resolve();
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // e.g., "http://localhost:3000"
     credentials: true,
   })
 );
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/message", messageRoute);

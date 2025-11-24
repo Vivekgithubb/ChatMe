@@ -102,15 +102,16 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile Picture is required" });
 
     const userId = req.user._id; // from the middleware
-
     const uploadResponse = await cloudinary.uploader.upload(profilePic);
-    const updatedUser = await User.findById(
+    console.log(uploadResponse);
+    const updatedUser = await User.findByIdAndUpdate(
       userId,
       { profilePic: uploadResponse.secure_url },
       { new: true }
     );
     res.status(200).json(updatedUser);
   } catch (err) {
-    res.status(500).json({ message: err });
+    console.error("UPDATE PROFILE ERROR:", err);
+    res.status(500).json({ message: err.message || "Server error" });
   }
 };
