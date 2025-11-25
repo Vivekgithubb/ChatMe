@@ -69,13 +69,14 @@ export const useChatStore = create((set, get) => ({
     const optimisticMesage = {
       _id: tempId,
       senderId: authUser._id,
-      receivedId: selectedUser._id,
-      text: messagedata.text,
-      image: messagedata.image,
+      receiverId: selectedUser._id,
+      text: messagedata.text || null,
+      imageUrl: messagedata.image,
       createdAt: new Date().toISOString(),
       isOptimistic: true,
     };
     //immediatly update the ui by adding the message
+    console.log(optimisticMesage);
     set({ messages: [...messages, optimisticMesage] });
     try {
       const res = await axiosInstance.post(
@@ -88,5 +89,30 @@ export const useChatStore = create((set, get) => ({
       set({ messages: messages });
       toast.error(err.response?.data?.message || "Something went wrong");
     }
+  },
+  subscribeToMessages: () => {
+    const { selectedUser, isSoundEnabled } = get();
+    if (!selectedUser) return;
+
+    const socket = useAuthStore.getState().socket;
+
+    socket.on("newMessage", (newMessage) => {
+      const isMessageSentFromSelectedUser =
+        newMessage.senderId === selectedUser._id;
+      //to get messages only from the selected User
+      if (!isMessageSentFromSelectedUser) return;
+
+      const currentMessages = get().messages;
+      set({ messages: [...currentMessages, newMessage] });
+      const notificationSound = new Audio("/sounds/keystroke1.mp3");
+      if (isSoundEnabled) {
+        notificationSound.currentTime = 0;
+        notificationSound.play();
+      }
+    });
+  },
+  unSubscribeToMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
   },
 }));
