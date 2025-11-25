@@ -11,10 +11,10 @@ function SignUpPage() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const { signUp, isSigningUp } = useAuthStore();
+  const { signup, isSigningUp } = useAuthStore();
   const handleSubmit = (e) => {
     e.preventDefault();
-    signUp(form);
+    signup(form);
   };
   const errors = 5;
 
@@ -165,9 +165,9 @@ function SignUpPage() {
         </form>
 
         <div className="mt-6 text-center text-sm text-white/70">
-          Already have an account?{" "}
+          Already have an account?
           <Link className="underline" to="/login">
-            Sign in
+            Log in
           </Link>
         </div>
       </motion.div>
