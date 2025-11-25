@@ -11,9 +11,9 @@ export default function ActiveTabSwitch() {
           activeTab === "chats"
             ? "bg-cyan-500/20 text-cyan-400"
             : "text-slate-400"
-        }`}
+        } font-medium`}
       >
-        chats
+        Chats
       </button>
       <button
         onClick={() => setActiveTab("contacts")}
@@ -21,9 +21,9 @@ export default function ActiveTabSwitch() {
           activeTab === "contacts"
             ? "bg-cyan-500/20 text-cyan-400"
             : "text-slate-400"
-        }`}
+        } font-medium`}
       >
-        contacts
+        Contacts
       </button>
     </div>
   );

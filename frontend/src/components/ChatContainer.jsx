@@ -37,7 +37,7 @@ export default function ChatContainer() {
                   className={`chat-bubble relative ${
                     msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
-                      : "bg-slate-800 text-slate-200"
+                      : "bg-slate-700 text-slate-200"
                   }`}
                 >
                   {msg.imageUrl && (

@@ -7,12 +7,11 @@ import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { ENV } from "./lib/env.js";
+import { app, server } from "./socket.js";
 
 dotenv.config({ path: "src/.env" });
 const PORT = ENV.PORT;
 const __dirname = path.resolve();
-
-const app = express();
 
 app.use(
   cors({
@@ -39,7 +38,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Running at ", PORT);
   connectDB();
 });
