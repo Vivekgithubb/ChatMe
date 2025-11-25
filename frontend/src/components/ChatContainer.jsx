@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
 import ChatHeader from "./ChatHeader";
 import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
@@ -10,12 +10,19 @@ export default function ChatContainer() {
   const { selectedUser, getMessagesByUserId, messages, isMessagesLoading } =
     useChatStore();
   const { authUser } = useAuthStore();
+  const messageEndRef = useRef(null);
 
+  console.log(messages);
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
   }, [getMessagesByUserId, selectedUser._id]);
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
   return (
-    <div>
+    <div className="flex flex-col justify-between h-full">
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-6">
         {messages?.length > 0 && !isMessagesLoading ? (
@@ -33,13 +40,13 @@ export default function ChatContainer() {
                       : "bg-slate-800 text-slate-200"
                   }`}
                 >
-                  {msg.image && (
+                  {msg.imageUrl && (
                     <img
-                      src={msg.image}
-                      className="rounded-lg h-49 object-cover"
+                      src={msg.imageUrl}
+                      className="rounded-lg h-[300px] object-cover"
                     />
                   )}
-                  {msg.text && <p className="mt-2">{msg.text}</p>}
+                  {msg.text && <p className="mt-2 text-left">{msg.text}</p>}
                   <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
@@ -55,6 +62,7 @@ export default function ChatContainer() {
         ) : (
           <NoChatHistoryPlaceholder name={selectedUser.fullname} />
         )}
+        <div ref={messageEndRef} />
       </div>
       <MessageInput />
     </div>

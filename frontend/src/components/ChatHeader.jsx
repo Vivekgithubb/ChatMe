@@ -15,7 +15,7 @@ export default function ChatHeader() {
     window.removeEventListener("keydown", handleEsc);
   }, [setSelectedUser]);
   return (
-    <div className="flex justify-between items-center border-b border-slate-600 max-h-[80px] px-5 pb-5 flex-1">
+    <div className="flex justify-between items-center border-b border-slate-600 max-h-[65px] px-5  flex-1">
       <div className="flex flex-row">
         <div className="avatar online">
           <div className="w-8 h-8 rounded-full">
